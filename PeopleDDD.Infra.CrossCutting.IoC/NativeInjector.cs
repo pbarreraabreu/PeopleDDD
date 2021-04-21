@@ -15,7 +15,7 @@ namespace PeopleDDD.Infra.CrossCutting.IoC
             services.AddScoped<IPeopleAppService, PeopleAppService>();
 
             services.AddScoped<IPeopleRepository, PeopleRepository>();
-            services.AddScoped<PeopleDDDContext>();
+            services.AddScoped<PeopleDDDContext>();            
         }
     }
 }

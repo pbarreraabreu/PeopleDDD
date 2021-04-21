@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using MediatR;
 using PeopleDDD.Application.Interfaces;
 using PeopleDDD.Application.ViewModels;
+using PeopleDDD.Domain.Commands;
 using PeopleDDD.Domain.Interfaces;
 using PeopleDDD.Domain.Models;
 using System;
@@ -14,11 +16,13 @@ namespace PeopleDDD.Application.Services
     {
         private readonly IPeopleRepository peopleRepository;
         private readonly IMapper mapper;
+        private readonly IMediator mediator;
 
-        public PeopleAppService(IPeopleRepository peopleRepository, IMapper mapper)
+        public PeopleAppService(IPeopleRepository peopleRepository, IMapper mapper, IMediator mediator)
         {
             this.peopleRepository = peopleRepository;
             this.mapper = mapper;
+            this.mediator = mediator;
         }
 
         public async Task<IEnumerable<PeopleViewModel>> GetAll()
@@ -35,24 +39,22 @@ namespace PeopleDDD.Application.Services
 
         public async Task Register(PeopleViewModel peopleViewModel)
         {
-            People model = mapper.Map<People>(peopleViewModel);
-            await peopleRepository.Add(model);
+            var commandRequest = mapper.Map<CreatePeopleCommand>(peopleViewModel);
+
+            await mediator.Send(commandRequest);
         }
 
         public async Task Update(PeopleViewModel peopleViewModel)
         {
-            People model = mapper.Map<People>(peopleViewModel);
-            await peopleRepository.Update(model);
+            var commandRequest = mapper.Map<UpdatePeopleCommand>(peopleViewModel);
+
+            await mediator.Send(commandRequest);
         }
 
         public async Task Remove(int id)
         {
-            var result = await peopleRepository.FindBy(e => e.ID == id);
-            People model = result.FirstOrDefault();
-            if (model == null)
-                throw new Exception("User not found");
-
-            await peopleRepository.Remove(model);
+            var commandRequest = new RemovePeopleCommand(id);
+            await mediator.Send(commandRequest);
         }
     }
 }

@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,7 +31,11 @@ namespace PeopleDDD.UI
 
             services.AddAutoMapperConfiguration();
 
-            services.AddDependencyInjectionConfiguration();
+            //services.AddMediatR(typeof(Startup));
+            var assembly = AppDomain.CurrentDomain.Load("PeopleDDD.Domain");
+            services.AddMediatR(assembly);
+
+            services.AddDependencyInjectionConfiguration();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

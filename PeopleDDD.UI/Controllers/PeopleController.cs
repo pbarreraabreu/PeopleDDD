@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PeopleDDD.Application.Interfaces;
 using PeopleDDD.Application.ViewModels;
+using System;
 using System.Threading.Tasks;
 
 namespace PeopleDDD.UI.Controllers
@@ -51,7 +52,7 @@ namespace PeopleDDD.UI.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }
