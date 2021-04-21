@@ -13,11 +13,7 @@ namespace PeopleDDD.Infra.Data.Context
         public PeopleDDDContext(DbContextOptions<PeopleDDDContext> options) : base(options)
         {
         }
-        public DbSet<People> Peoples { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-        }
+        public DbSet<People> Peoples { get; set; }       
     }
 }

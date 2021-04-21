@@ -12,21 +12,6 @@ namespace PeopleDDD.Infra.Data.Repository
     {
         public PeopleRepository(PeopleDDDContext context): base(context)
         {
-        }
-
-       /* public async Task<IEnumerable<People>> GetAll()
-        {
-            var t = Task.Run<IEnumerable<People>>(() =>
-            {
-                var peoples = new List<People>();
-                peoples.Add(new People { Name = "Pedro", Dni = "sadf", Phone = "555" });
-                peoples.Add(new People { Name = "Pedro", Dni = "sadf", Phone = "555" });
-                peoples.Add(new People { Name = "Pedro", Dni = "sadf", Phone = "555" });
-
-                return peoples;
-            });
-
-            return await t;
-        }*/
+        }        
     }
 }

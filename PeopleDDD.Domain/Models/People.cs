@@ -6,7 +6,7 @@ namespace PeopleDDD.Domain.Models
 {
     public class People
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Dni { get; set; }

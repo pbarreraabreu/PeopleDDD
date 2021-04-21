@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PeopleDDD.Application.Interfaces;
+using PeopleDDD.Application.ViewModels;
 using System.Threading.Tasks;
 
 namespace PeopleDDD.UI.Controllers
@@ -21,13 +22,19 @@ namespace PeopleDDD.UI.Controllers
         }
 
         // GET: PeopleController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult<PeopleViewModel>> Details(int? id)
         {
-            return View();
+            if (!id.HasValue) return NotFound();
+
+            PeopleViewModel viewModel = await peopleAppService.GetById(id.Value);
+
+            if (viewModel == null) return NotFound();
+
+            return View(viewModel);
         }
 
         // GET: PeopleController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -35,10 +42,13 @@ namespace PeopleDDD.UI.Controllers
         // POST: PeopleController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(PeopleViewModel viewModel)
         {
             try
             {
+                if (!ModelState.IsValid) return View(viewModel);
+                await peopleAppService.Register(viewModel);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -48,18 +58,28 @@ namespace PeopleDDD.UI.Controllers
         }
 
         // GET: PeopleController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult<PeopleViewModel>> Edit(int? id)
         {
-            return View();
+            if (!id.HasValue) return NotFound();
+
+            PeopleViewModel viewModel = await peopleAppService.GetById(id.Value);
+
+            if (viewModel == null) return NotFound();
+
+            return View(viewModel);
         }
 
         // POST: PeopleController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(PeopleViewModel viewModel)
         {
             try
             {
+                if (!ModelState.IsValid) return View(viewModel);
+
+                await peopleAppService.Update(viewModel);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -69,18 +89,27 @@ namespace PeopleDDD.UI.Controllers
         }
 
         // GET: PeopleController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult<PeopleViewModel>> Delete(int? id)
         {
-            return View();
+            if (!id.HasValue) return NotFound();
+
+            PeopleViewModel viewModel = await peopleAppService.GetById(id.Value);
+
+            if (viewModel == null) return NotFound();
+
+            return View(viewModel);
         }
 
         // POST: PeopleController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
+                await peopleAppService.Remove(id);
+                ViewBag.Sucesso = "Customer Removed!";
+
                 return RedirectToAction(nameof(Index));
             }
             catch
