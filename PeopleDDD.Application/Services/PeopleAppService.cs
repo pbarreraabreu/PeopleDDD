@@ -5,6 +5,7 @@ using PeopleDDD.Application.ViewModels;
 using PeopleDDD.Domain.Commands;
 using PeopleDDD.Domain.Interfaces;
 using PeopleDDD.Domain.Models;
+using PeopleDDD.Domain.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,28 +14,28 @@ using System.Threading.Tasks;
 namespace PeopleDDD.Application.Services
 {
     public class PeopleAppService : IPeopleAppService
-    {
-        private readonly IPeopleRepository peopleRepository;
+    {        
         private readonly IMapper mapper;
         private readonly IMediator mediator;
 
-        public PeopleAppService(IPeopleRepository peopleRepository, IMapper mapper, IMediator mediator)
-        {
-            this.peopleRepository = peopleRepository;
+        public PeopleAppService(IMapper mapper, IMediator mediator)
+        {            
             this.mapper = mapper;
             this.mediator = mediator;
         }
 
         public async Task<IEnumerable<PeopleViewModel>> GetAll()
         {
-            return mapper.Map<IEnumerable<PeopleViewModel>>(await peopleRepository.GetAll());
+            var commandRequest = new GetAllPeopleQuery();
+            var result = await mediator.Send(commandRequest);
+            return mapper.Map<IEnumerable<PeopleViewModel>>(result);
         }
 
         public async Task<PeopleViewModel> GetById(int id)
         {
-            IEnumerable<People> result = await peopleRepository.FindBy(e => e.ID == id);
-
-            return mapper.Map<PeopleViewModel>(result.FirstOrDefault());
+            var commandRequest = new GetByIdPeopleQuery(id);
+            var result = await mediator.Send(commandRequest);
+            return mapper.Map<PeopleViewModel>(result);
         }
 
         public async Task Register(PeopleViewModel peopleViewModel)
